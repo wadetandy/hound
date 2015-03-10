@@ -3,5 +3,4 @@
   .violation-bar
     %span.violation-count {{ violation.count }}
     %svg.svg-container
-      <dashboard-bar count='{{ violation.count }}' max-count='{{ maxCount }}'>
-      </dashboard-bar>
+      %dashboard-bar{ count: '{{ violation.count }}', 'max-count' => '{{ maxCount }}' }

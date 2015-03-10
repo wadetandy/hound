@@ -3,9 +3,9 @@ App.directive "violationDashboard", ["Violation", (Violation) ->
   templateUrl: "/templates/dashboard"
 
   link: (scope, element, attributes) ->
-    loadData = =>
+    loadData = ->
       violations = Violation.query()
-      violations.$promise.then (results) =>
+      violations.$promise.then (results) ->
         scope.maxCount = d3.max(results, (d) -> d.count)
         scope.violations = results
 
