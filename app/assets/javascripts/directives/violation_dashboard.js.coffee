@@ -1,5 +1,6 @@
 App.directive "violationDashboard", ["Violation", (Violation) ->
   scope: {}
+  restrict: "E"
   templateUrl: "/templates/dashboard"
 
   link: (scope, element, attributes) ->
