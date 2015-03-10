@@ -1,31 +1,28 @@
-App.directive 'dashboardBar', [ ->
-  scope: {
-  }
-  restrict: 'E'
+App.directive "dashboardBar", [ ->
+  scope: {}
+  restrict: "E"
 
   link: (scope, element, attributes) ->
-    scope.maxCount = parseInt(attributes['maxCount'])
-    scope.count = parseInt(attributes['count'])
+    @maxCount = parseInt(attributes["maxCount"])
+    @count = parseInt(attributes["count"])
 
     renderBar = ->
       svg = d3.select(element[0].parentNode)
       violationBarWidth = parseFloat(svg.style("width"))
 
       yScale = d3.scale.linear()
-        .domain([0, scope.maxCount])
+        .domain([0, @maxCount])
         .range([0, violationBarWidth])
 
       svg
         .attr("width", violationBarWidth)
-        .append('rect')
+        .append("rect")
         .attr(
           x: 0
           y: 0
-          width: yScale(scope.count)
+          width: yScale(@count)
           height: 20
         )
 
-    scope.$watch 'count', (newValue, oldValue) =>
-      if newValue
-        renderBar()
+    renderBar()
 ]

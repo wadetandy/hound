@@ -1,4 +1,4 @@
-body.dashboard {
+.dashboard {
   .content {
     max-width: 980px;
   }
@@ -6,6 +6,7 @@ body.dashboard {
 
 .violations-count-table {
   @include outer-container;
+
   font-size: 0.85em;
 
   .violation-name { @include span-columns(7); }
@@ -19,12 +20,12 @@ body.dashboard {
   .svg-container {
     @include span-columns(4 of 5);
   }
+}
 
-  svg.svg-container {
-    max-height: 50px;
+.svg-container {
+  max-height: 50px;
 
-    rect {
-      fill: rgb(192, 153, 222);
-    }
+  rect {
+    fill: rgb(192, 153, 222);
   }
 }
