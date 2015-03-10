@@ -4,10 +4,10 @@ class RubyViolationAnalytics
   end
 
   def violation_counts
-    message_counts
-      .sort_by { |violation_count| violation_count[:count] }
-      .reverse
-      .take(20)
+    message_counts.
+      sort_by { |violation_count| violation_count[:count] }.
+      reverse.
+      take(20)
   end
 
   private

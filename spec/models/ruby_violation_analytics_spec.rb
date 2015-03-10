@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe RubyViolationAnalytics do
   describe "#violation_counts" do
-    it "works" do
+    it "returns counts of each violation message" do
       repo = create(:repo)
       build = create(:build, repo: repo)
       create(:violation, build: build, messages: ["Test message!"])
@@ -20,7 +20,8 @@ describe RubyViolationAnalytics do
             message: "Test message!",
             count: 2
           },
-          { message: "Line is too long. [81/80]",
+          {
+            message: "Line is too long. [81/80]",
             count: 1
           }
         ]
