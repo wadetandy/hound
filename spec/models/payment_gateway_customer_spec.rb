@@ -78,4 +78,18 @@ describe PaymentGatewayCustomer do
       expect(customer).to be payment_gateway_customer.customer
     end
   end
+
+  describe "#new_with_customer" do
+    it "returns a new instance with customer set" do
+      user = build_stubbed(:user, stripe_customer_id: nil)
+      customer = :customer
+
+      payment_gateway_customer = PaymentGatewayCustomer.new_with_customer(
+        user,
+        customer
+      )
+
+      expect(payment_gateway_customer.customer).to eq customer
+    end
+  end
 end
