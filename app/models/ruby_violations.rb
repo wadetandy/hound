@@ -1,9 +1,9 @@
-class RubyViolationAnalytics
+class RubyViolations
   def initialize(repos)
     @repos = repos
   end
 
-  def violation_counts
+  def count
     message_counts.
       sort_by { |violation_count| violation_count[:count] }.
       reverse.

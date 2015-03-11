@@ -1,8 +1,8 @@
 class DashboardsController < ApplicationController
   def show
-    @violation_counts = RubyViolationAnalytics.
+    @violation_counts = RubyViolations.
       new(current_user.repos.active).
-      violation_counts
+      count
 
     respond_to do |format|
       format.html
