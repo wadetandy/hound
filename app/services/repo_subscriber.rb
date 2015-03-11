@@ -10,16 +10,19 @@ class RepoSubscriber
   end
 
   def subscribe
-    customer = if user.stripe_customer_id.present?
-      payment_gateway_customer
-    else
-      create_stripe_customer
+    stripe_subscription = customer.subscriptions.detect do |subscription|
+      subscription.plan.id == repo.plan_type
     end
 
-    stripe_subscription = customer.subscriptions.create(
-      plan: repo.plan_type,
-      metadata: { repo_id: repo.id }
-    )
+    if stripe_subscription
+      stripe_subscription.quantity += 1
+      stripe_subscription.save
+    else
+      stripe_subscription = customer.subscriptions.create(
+        plan: repo.plan_type,
+        metadata: { repo_id: repo.id }
+      )
+    end
 
     repo.create_subscription!(
       user_id: user.id,
@@ -51,6 +54,14 @@ class RepoSubscriber
       error,
       extra: { user_id: user.id, repo_id: repo.id }
     )
+  end
+
+  def customer
+    @customer ||= if user.stripe_customer_id.present?
+      payment_gateway_customer
+    else
+      create_stripe_customer
+    end
   end
 
   def payment_gateway_customer

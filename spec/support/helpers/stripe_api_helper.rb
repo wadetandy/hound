@@ -35,6 +35,20 @@ module StripeApiHelper
     )
   end
 
+  def stub_customer_find_request_with_subscriptions
+    stub_request(
+      :get,
+      "#{stripe_base_url}/#{stripe_customer_id}"
+    ).with(
+      headers: { "Authorization" => "Bearer #{ENV["STRIPE_API_KEY"]}" }
+    ).to_return(
+      status: 200,
+      body: File.read(
+        "spec/support/fixtures/stripe_customer_find_with_subscriptions.json"
+      )
+    )
+  end
+
   def stub_customer_update_request(card_token = "cardtoken")
     stub_request(
       :post,
@@ -62,6 +76,20 @@ module StripeApiHelper
     ).to_return(
       status: 200,
       body: File.read("spec/support/fixtures/stripe_subscription_create.json"),
+    )
+  end
+
+  def stub_subscription_update_request(quantity: 1)
+    stub_request(
+      :post,
+      "#{stripe_base_url}/#{stripe_customer_id}/"\
+        "subscriptions/#{stripe_subscription_id}"
+    ).with(
+      body: { "quantity" => quantity.to_s },
+      headers: { "Authorization" => "Bearer #{ENV["STRIPE_API_KEY"]}" }
+    ).to_return(
+      status: 200,
+      body: File.read("spec/support/fixtures/stripe_subscription_update.json"),
     )
   end
 

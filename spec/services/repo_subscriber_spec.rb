@@ -3,24 +3,53 @@ require "spec_helper"
 describe RepoSubscriber do
   describe ".subscribe" do
     context "when Stripe customer exists" do
-      it "creates a new Stripe subscription and repo subscription" do
-        repo = create(:repo, private: true)
-        user =
-          create(:user, stripe_customer_id: stripe_customer_id, repos: [repo])
-        stub_customer_find_request
-        update_request = stub_customer_update_request
-        subscription_request = stub_subscription_create_request(
-          plan: repo.plan_type,
-          repo_id: repo.id,
-        )
+      context "when a subscription doesn't exist" do
+        it "creates a new Stripe subscription and repo subscription" do
+          repo = create(:repo, private: true)
+          user =
+            create(:user, stripe_customer_id: stripe_customer_id, repos: [repo])
+          stub_customer_find_request
+          update_request = stub_customer_update_request
+          subscription_request = stub_subscription_create_request(
+            plan: repo.plan_type,
+            repo_id: repo.id,
+          )
 
-        RepoSubscriber.subscribe(repo, user, "cardtoken")
+          RepoSubscriber.subscribe(repo, user, "cardtoken")
 
-        expect(subscription_request).to have_been_requested
-        expect(update_request).not_to have_been_requested
-        expect(repo.subscription.stripe_subscription_id).
-          to eq(stripe_subscription_id)
-        expect(repo.subscription_price).to(eq(Plan::PRICES[:private]))
+          expect(subscription_request).to have_been_requested
+          expect(update_request).not_to have_been_requested
+          expect(repo.subscription.stripe_subscription_id).
+            to eq(stripe_subscription_id)
+          expect(repo.subscription_price).to(eq(Plan::PRICES[:private]))
+        end
+      end
+
+      context "when a subscription exists" do
+        it "increments the Stripe subscription quantity and creates a repo subscription" do
+          repo = create(:repo, private: true)
+          user = create(
+            :user,
+            stripe_customer_id: stripe_customer_id,
+            repos: [repo]
+          )
+          stub_customer_find_request_with_subscriptions
+          subscription_update_request = stub_subscription_update_request(
+            quantity: 2
+          )
+          subscription_create_request = stub_subscription_create_request(
+            plan: repo.plan_type,
+            repo_id: repo.id,
+          )
+
+          RepoSubscriber.subscribe(repo, user, "cardtoken")
+
+          expect(subscription_create_request).not_to have_been_requested
+          expect(subscription_update_request).to have_been_requested
+          expect(repo.subscription.stripe_subscription_id).
+            to eq(stripe_subscription_id)
+          expect(repo.subscription_price).to(eq(Plan::PRICES[:private]))
+        end
       end
     end
 
