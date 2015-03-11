@@ -26,7 +26,7 @@ describe RepoSubscriber do
       end
 
       context "when a subscription exists" do
-        it "increments the Stripe subscription quantity and creates a repo subscription" do
+        it "increments the Stripe subscription and updates repo subscription" do
           repo = create(:repo, private: true)
           user = create(
             :user,
@@ -114,38 +114,63 @@ describe RepoSubscriber do
   end
 
   describe ".unsubscribe" do
-    it "deletes Stripe subscription" do
-      user = create(:user, stripe_customer_id: stripe_customer_id)
-      subscription = create(
-        :subscription,
-        stripe_subscription_id: stripe_subscription_id,
-        user: user
-      )
-      user.repos << subscription.repo
-      stub_customer_find_request
-      stub_subscription_find_request(subscription)
-      stripe_delete_request = stub_subscription_delete_request
+    context "when the subscription quantity is 1" do
+      it "deletes Stripe subscription" do
+        user = create(:user, stripe_customer_id: stripe_customer_id)
+        subscription = create(
+          :subscription,
+          stripe_subscription_id: stripe_subscription_id,
+          user: user
+        )
+        user.repos << subscription.repo
+        stub_customer_find_request
+        stub_subscription_find_request(subscription)
+        stripe_delete_request = stub_subscription_delete_request
 
-      RepoSubscriber.unsubscribe(subscription.repo, user)
+        RepoSubscriber.unsubscribe(subscription.repo, user)
 
-      expect(stripe_delete_request).to have_been_requested
+        expect(stripe_delete_request).to have_been_requested
+      end
+
+      it "soft deletes the Repo subscription" do
+        user = create(:user, stripe_customer_id: stripe_customer_id)
+        subscription = create(
+          :subscription,
+          stripe_subscription_id: stripe_subscription_id,
+          user: user
+        )
+        user.repos << subscription.repo
+        stub_customer_find_request
+        stub_subscription_find_request(subscription)
+        stub_subscription_delete_request
+
+        RepoSubscriber.unsubscribe(subscription.repo, user)
+
+        expect(subscription.reload).to be_deleted
+      end
     end
 
-    it "soft deletes the Repo subscription" do
-      user = create(:user, stripe_customer_id: stripe_customer_id)
-      subscription = create(
-        :subscription,
-        stripe_subscription_id: stripe_subscription_id,
-        user: user
-      )
-      user.repos << subscription.repo
-      stub_customer_find_request
-      stub_subscription_find_request(subscription)
-      stub_subscription_delete_request
+    context "when the subscription quantity is greater 1" do
+      it "decrements the Stripe subscription quantity" do
+        user = create(:user, stripe_customer_id: stripe_customer_id)
+        subscription = create(
+          :subscription,
+          stripe_subscription_id: stripe_subscription_id,
+          user: user
+        )
+        user.repos << subscription.repo
+        stub_customer_find_request
+        stub_subscription_find_request(subscription, quantity: 2)
+        stripe_delete_request = stub_subscription_delete_request
+        subscription_update_request = stub_subscription_update_request(
+          quantity: 1
+        )
 
-      RepoSubscriber.unsubscribe(subscription.repo, user)
+        RepoSubscriber.unsubscribe(subscription.repo, user)
 
-      expect(subscription.reload).to be_deleted
+        expect(stripe_delete_request).not_to have_been_requested
+        expect(subscription_update_request).to have_been_requested
+      end
     end
 
     context "when Stripe unsubscription fails" do

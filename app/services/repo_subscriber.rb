@@ -39,7 +39,13 @@ class RepoSubscriber
     stripe_subscription = payment_gateway_customer.subscriptions.retrieve(
       repo.subscription.stripe_subscription_id
     )
-    stripe_subscription.delete
+
+    if stripe_subscription.quantity > 1
+      stripe_subscription.quantity -= 1
+      stripe_subscription.save
+    else
+      stripe_subscription.delete
+    end
 
     repo.subscription.destroy
   rescue => error
@@ -57,10 +63,12 @@ class RepoSubscriber
   end
 
   def customer
-    @customer ||= if user.stripe_customer_id.present?
-      payment_gateway_customer
-    else
-      create_stripe_customer
+    @customer ||= begin
+      if user.stripe_customer_id.present?
+        payment_gateway_customer
+      else
+        create_stripe_customer
+      end
     end
   end
 
