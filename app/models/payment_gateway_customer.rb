@@ -1,10 +1,9 @@
 class PaymentGatewayCustomer
-  pattr_initialize :user
+  attr_reader :user
 
-  def self.new_with_customer(user, customer)
-    payment_gateway_customer = new(user)
-    payment_gateway_customer.customer = customer
-    payment_gateway_customer
+  def initialize(user, customer: nil)
+    @user = user
+    self.customer = customer
   end
 
   def email
@@ -31,20 +30,13 @@ class PaymentGatewayCustomer
 
   def find_or_create_subscription(plan:, repo_id:)
     subscriptions.detect { |subscription| subscription.plan == plan } ||
-      create_subscription(plan: plan, metadata: { repo_ids: [repo_id] })
+      create_subscription(plan: plan, metadata: { repo_ids: [repo_id] },)
   end
 
   def subscriptions
     customer.subscriptions.map do |subscription|
       PaymentGatewaySubscription.new(subscription)
     end
-  end
-
-  def create_subscription(options)
-    PaymentGatewaySubscription.new(
-      customer.subscriptions.create(options),
-      new_subscription: true
-    )
   end
 
   def retrieve_subscription(stripe_subscription_id)
@@ -59,6 +51,13 @@ class PaymentGatewayCustomer
   end
 
   private
+
+  def create_subscription(options)
+    PaymentGatewaySubscription.new(
+      customer.subscriptions.create(options),
+      new_subscription: true,
+    )
+  end
 
   def default_card
     customer.cards.detect { |card| card.id == customer.default_card } ||

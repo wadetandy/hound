@@ -12,7 +12,7 @@ class RepoSubscriber
   def subscribe
     payment_gateway_subscription = customer.find_or_create_subscription(
       plan: repo.plan_type,
-      repo_id: repo.id
+      repo_id: repo.id,
     )
 
     payment_gateway_subscription.subscribe(repo.id)
@@ -20,7 +20,7 @@ class RepoSubscriber
     repo.create_subscription!(
       user_id: user.id,
       stripe_subscription_id: payment_gateway_subscription.id,
-      price: repo.plan_price
+      price: repo.plan_price,
     )
   rescue => error
     report_exception(error)
@@ -72,6 +72,6 @@ class RepoSubscriber
 
     user.update(stripe_customer_id: stripe_customer.id)
 
-    PaymentGatewayCustomer.new_with_customer(user, stripe_customer)
+    PaymentGatewayCustomer.new(user, customer: stripe_customer)
   end
 end

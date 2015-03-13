@@ -9,7 +9,7 @@ describe RepoSubscriber do
           user = create(
             :user,
             stripe_customer_id: stripe_customer_id,
-            repos: [repo]
+            repos: [repo],
           )
           stub_customer_find_request
           update_request = stub_customer_update_request
@@ -34,13 +34,13 @@ describe RepoSubscriber do
           user = create(
             :user,
             stripe_customer_id: stripe_customer_id,
-            repos: [repo]
+            repos: [repo],
           )
           stub_customer_find_request_with_subscriptions
           repo_ids = [repo.id]
           subscription_update_request = stub_subscription_update_request(
             quantity: 2,
-            repo_ids: repo_ids
+            repo_ids: repo_ids,
           )
           subscription_create_request = stub_subscription_create_request(
             plan: repo.plan_type,
@@ -61,12 +61,12 @@ describe RepoSubscriber do
     context "when Stripe customer does not exist" do
       it "creates a new Stripe customer, subscription and repo subscription" do
         repo = create(:repo)
-        user = create(:user, repos: [repo], stripe_customer_id: "")
+        user = create(:user, repos: [repo], stripe_customer_id: "",)
         customer_request = stub_customer_create_request(user)
         subscription_request =
           stub_subscription_create_request(
             plan: repo.plan_type,
-            repo_ids: [repo.id]
+            repo_ids: [repo.id],
         )
 
         RepoSubscriber.subscribe(repo, user, "cardtoken")
@@ -111,7 +111,7 @@ describe RepoSubscriber do
         stub_customer_create_request(user)
         stub_subscription_create_request(
           plan: repo.plan_type,
-          repo_ids: [repo.id]
+          repo_ids: [repo.id],
         )
         stripe_delete_request = stub_subscription_delete_request
         allow(repo).to receive(:create_subscription!).and_raise(StandardError)
@@ -197,7 +197,7 @@ describe RepoSubscriber do
     subscription = create(
       :subscription,
       stripe_subscription_id: stripe_subscription_id,
-      user: user
+      user: user,
     )
     user.repos << subscription.repo
     subscription

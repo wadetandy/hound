@@ -79,14 +79,14 @@ describe PaymentGatewayCustomer do
     end
   end
 
-  describe "#new_with_customer" do
+  describe "#new with_customer" do
     it "returns a new instance with customer set" do
       user = build_stubbed(:user, stripe_customer_id: nil)
       customer = :customer
 
-      payment_gateway_customer = PaymentGatewayCustomer.new_with_customer(
+      payment_gateway_customer = PaymentGatewayCustomer.new(
         user,
-        customer
+        customer: customer,
       )
 
       expect(payment_gateway_customer.customer).to eq customer
