@@ -102,7 +102,7 @@ module StripeApiHelper
     )
     body["quantity"] = quantity
     request_url = "#{stripe_base_url}/#{stripe_customer_id}/"\
-                    "subscriptions/#{subscription.stripe_subscription_id}"
+      "subscriptions/#{subscription.stripe_subscription_id}"
 
     stub_request(:get, request_url).with(
       headers: { "Authorization" => "Bearer #{ENV['STRIPE_API_KEY']}" }

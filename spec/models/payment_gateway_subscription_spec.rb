@@ -8,7 +8,9 @@ describe PaymentGatewaySubscription do
         subscription = PaymentGatewaySubscription.new(stripe_subscription)
 
         expect(stripe_subscription.metadata["repo_ids"]).to eq ["1"]
+
         subscription.subscribe(2)
+
         expect(stripe_subscription.metadata["repo_ids"]).to eq ["1", "2"]
       end
 
@@ -17,8 +19,10 @@ describe PaymentGatewaySubscription do
         subscription = PaymentGatewaySubscription.new(legacy_subscription)
 
         expect(legacy_subscription.metadata["repo_id"]).to eq "1"
+
         subscription.subscribe(2)
-        expect(legacy_subscription.metadata["repo_id"]).to be_falsy
+
+        expect(legacy_subscription.metadata["repo_id"]).to be_nil
         expect(legacy_subscription.metadata["repo_ids"]).to eq ["1", "2"]
       end
     end

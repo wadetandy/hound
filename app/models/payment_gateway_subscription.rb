@@ -10,7 +10,7 @@ class PaymentGatewaySubscription
 
   def subscribe(repo_id)
     append_repo_id_to_metadata(repo_id)
-    unless new_subscription?
+    if existing_subscription?
       increment_quantity
     end
   end
@@ -38,6 +38,10 @@ class PaymentGatewaySubscription
     subscription.plan.id
   end
 
+  def existing_subscription?
+    !@new_subscription
+  end
+
   def new_subscription?
     @new_subscription
   end
@@ -45,17 +49,11 @@ class PaymentGatewaySubscription
   private
 
   def current_repo_ids
-    repo_ids = metadata["repo_ids"] || []
-
-    if repo_ids.length.zero? && metadata["repo_id"]
-      repo_ids = [metadata["repo_id"]]
-    end
-
-    repo_ids
+    Array(metadata["repo_ids"] || metadata["repo_id"])
   end
 
   def append_repo_id_to_metadata(repo_id)
-    repo_ids = current_repo_ids.push(repo_id)
+    repo_ids = current_repo_ids + [repo_id]
 
     if metadata["repo_id"]
       metadata["repo_id"] = nil
