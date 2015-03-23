@@ -3,7 +3,7 @@ class PaymentGatewayCustomer
 
   def initialize(user, customer: nil)
     @user = user
-    self.customer = customer
+    @customer = customer
   end
 
   def email
@@ -12,10 +12,6 @@ class PaymentGatewayCustomer
 
   def card_last4
     default_card.last4
-  end
-
-  def customer=(customer)
-    @customer = customer
   end
 
   def customer
