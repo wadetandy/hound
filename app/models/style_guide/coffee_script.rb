@@ -2,6 +2,7 @@
 module StyleGuide
   class CoffeeScript < Base
     DEFAULT_CONFIG_FILENAME = "coffeescript.json"
+    ERB_TAGS = /<%.*%>/
 
     def violations_in_file(file)
       content = content_for_file(file)
@@ -26,11 +27,7 @@ module StyleGuide
 
     def content_for_file(file)
       if erb? file
-        begin
-          ERB.new(file.content).result
-        rescue
-          ""
-        end
+        file.content.gsub(ERB_TAGS, "")
       else
         file.content
       end

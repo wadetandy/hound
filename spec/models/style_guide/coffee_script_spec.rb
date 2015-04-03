@@ -103,13 +103,13 @@ describe StyleGuide::CoffeeScript do
     end
 
     context "given a `coffee.erb` file" do
-      it "evaluates and lints the file" do
+      it "lints the file" do
         repo_config = double("RepoConfig", enabled_for?: true, for: {})
         style_guide = StyleGuide::CoffeeScript.new(repo_config, "Ralph")
         line = double("Line", content: "blah", number: 1, patch_position: 2)
         file = double(
           "File",
-          content: "<%= '1' * 81 %>",
+          content: "class strange_ClassNAME",
           filename: "test.coffee.erb",
           line_at: line
         )
@@ -122,26 +122,24 @@ describe StyleGuide::CoffeeScript do
         expect(violation.patch_position).to eq line.patch_position
         expect(violation.line_number).to eq 1
         expect(violation.messages).to match_array(
-          ["Line exceeds maximum allowed length"]
+          ["Class names should be camel cased"]
         )
       end
 
-      context "when the file refers to methods outside of it's scope" do
-        it "swallows the exception and returns no violations" do
-          repo_config = double("RepoConfig", enabled_for?: true, for: {})
-          style_guide = StyleGuide::CoffeeScript.new(repo_config, "Ralph")
-          line = double("Line", content: "blah", number: 1, patch_position: 2)
-          file = double(
-            "File",
-            content: "<%= i_dont_exist %>",
-            filename: "test.coffee.erb",
-            line_at: line
-          )
+      it "removes the ERB tags from the file" do
+        repo_config = double("RepoConfig", enabled_for?: true, for: {})
+        style_guide = StyleGuide::CoffeeScript.new(repo_config, "Ralph")
+        line = double("Line", content: "blah", number: 1, patch_position: 2)
+        file = double(
+          "File",
+          content: "<%= raise 'hell' %>",
+          filename: "test.coffee.erb",
+          line_at: line
+        )
 
-          violations = style_guide.violations_in_file(file)
+        violations = style_guide.violations_in_file(file)
 
-          expect(violations).to be_empty
-        end
+        expect(violations).to be_empty
       end
     end
 
