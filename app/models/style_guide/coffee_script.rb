@@ -27,7 +27,7 @@ module StyleGuide
 
     def content_for_file(file)
       if erb? file
-        file.content.gsub(ERB_TAGS, "")
+        file.content.gsub(ERB_TAGS, %q(""))
       else
         file.content
       end

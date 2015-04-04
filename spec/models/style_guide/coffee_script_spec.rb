@@ -132,9 +132,9 @@ describe StyleGuide::CoffeeScript do
         line = double("Line", content: "blah", number: 1, patch_position: 2)
         file = double(
           "File",
-          content: "<%= raise 'hell' %>",
+          content: "leonidasLastWords = <%= raise 'hell' %>",
           filename: "test.coffee.erb",
-          line_at: line
+          line_at: line,
         )
 
         violations = style_guide.violations_in_file(file)
