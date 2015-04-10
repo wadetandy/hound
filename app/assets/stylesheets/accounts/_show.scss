@@ -92,3 +92,30 @@ table {
     text-transform: uppercase;
   }
 }
+
+.account-details {
+  border-bottom: 1px dotted $base-border-color;
+  margin-bottom: 2em;
+  padding-bottom: 3em;
+
+  .button-small {
+    @include small-button("outline");
+  }
+
+  input[type="text"] {
+    font-weight: 300;
+    padding: 0.5em;
+    min-width: 20em;
+  }
+
+  .form-group {
+    label {
+      display: block;
+    }
+  }
+
+  .form-actions {
+    float: right;
+    margin-top: -2.9em;
+  }
+}

@@ -42,6 +42,16 @@
             %th.total-amount
               %label= @account_page.total_monthly_cost
 
+    %article.account-details
+      %h3
+        Update account settings
+      %form
+        .form-group
+          %label Email Address
+          %input{type: 'text', value: current_user.email_address}
+        .form-actions
+          %button.button-small Update
+
     %article.active-private-repos
       - if @account_page.repos.any?
         %h3 Active Private Repos
