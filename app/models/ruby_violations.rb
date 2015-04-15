@@ -5,7 +5,7 @@ class RubyViolations
 
   def count
     message_counts.
-      sort_by { |violation_count| violation_count[:count] }.
+      sort_by { |message_count| message_count[:count] }.
       reverse.
       take(20)
   end
@@ -24,13 +24,14 @@ class RubyViolations
   end
 
   def messages
-    @messages ||= @repos.flat_map do |repo|
+    @messages ||= @repos.map do |repo|
       build_ids = repo.build_ids
+
       violations = Violation.
         where(build_id: build_ids).
         where("filename ILIKE ?", "%.rb")
 
-      violations.flat_map(&:messages)
-    end
+      violations.pluck(:messages)
+    end.flatten
   end
 end
