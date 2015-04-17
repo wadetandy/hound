@@ -3,10 +3,7 @@ class DashboardsController < ApplicationController
     respond_to do |format|
       format.html
       format.json do
-        @violation_counts = RubyViolations.
-          new(current_user.repos.active).
-          count
-        render json: @violation_counts
+        render json: RubyViolations.new(current_user.repos.active).count
       end
     end
   end

@@ -3,9 +3,9 @@
 
   font-size: 0.85em;
 
-  .violation-name { @include span-columns(7); }
+  .violation-name { @include span-columns(6); }
   .violation-bar {
-    @include span-columns(5);
+    @include span-columns(6);
     @include omega();
   }
   .violation-count {
