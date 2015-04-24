@@ -56,7 +56,7 @@ class Repo < ActiveRecord::Base
   end
 
   def exempt?
-    ENV["EXEMPT_ORGS"] && ENV["EXEMPT_ORGS"].split(",").include?(organization)
+    true
   end
 
   def total_violations

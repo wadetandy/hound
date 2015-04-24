@@ -98,7 +98,7 @@ linters:
     severity: warning
   SingleLinePerProperty:
     enabled: true
-    allow_single_line_rule_sets: true
+    allow_single_line_rule_sets: false
   SingleLinePerSelector:
     enabled: true
   SpaceAfterComma:
