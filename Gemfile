@@ -39,6 +39,7 @@ group :staging, :production do
 end
 
 group :development, :test do
+  gem 'pry'
   gem "byebug"
   gem "dotenv-rails"
   gem "foreman"
