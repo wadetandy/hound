@@ -8,7 +8,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
       authorize_url: 'https://bbgithub.dev.bloomberg.com/login/oauth/authorize',
       token_url: 'https://bbgithub.dev.bloomberg.com/login/oauth/access_token',
       connection_opts: {
-        proxy: 'http://bproxy.cfe.bloomberg.com'
+        proxy: ENV['GITHUB_PROXY']
       }
     },
     scope: 'user:email,repo'
