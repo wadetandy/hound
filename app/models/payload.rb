@@ -33,6 +33,10 @@ class Payload
     data["zen"]
   end
 
+  def merge?
+    merge.present?
+  end
+
   def pull_request?
     pull_request.present?
   end
@@ -83,6 +87,10 @@ class Payload
 
   def pull_request
     data.fetch("pull_request", {})
+  end
+
+  def merge
+    data.fetch("merge", {})
   end
 
   def repository

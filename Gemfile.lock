@@ -1,5 +1,5 @@
 GEM
-  remote: https://rubygems.org/
+  remote: http://artifactory.dev.bloomberg.com:8080/artifactory/api/gems/rubygems/
   specs:
     actionmailer (4.2.1)
       actionpack (= 4.2.1)
@@ -391,3 +391,6 @@ DEPENDENCIES
   uglifier (>= 1.0.3)
   unicorn
   webmock
+
+BUNDLED WITH
+   1.11.2

@@ -1,4 +1,4 @@
-source "https://rubygems.org"
+source "http://artifactory.dev.bloomberg.com:8080/artifactory/api/gems/rubygems/" # Bloomberg cache of rubygems.org
 
 ruby "2.2.2"
 

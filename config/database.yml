@@ -1,9 +1,13 @@
 development: &default
   adapter: postgresql
   encoding: unicode
-  database: hound_development
-  pool: 5
+  database: docsync_dev
+  host: localhost
 
 test:
   <<: *default
-  database: hound_test
+  database: docsync_test
+
+production:
+  pool: <%= [ENV.fetch("MAX_THREADS", 5), ENV.fetch("DB_POOL", 5)].max %>
+  url:  <%= ENV.fetch("DATABASE_URL") if Rails.env.production? %>
