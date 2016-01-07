@@ -15,75 +15,10 @@ describe Repo do
   end
 
   describe "#exempt?" do
-    context "when repo is exempt" do
-      it "returns true" do
-        repo = Repo.new(full_github_name: "thoughtbot/hound")
+    it "returns true" do
+      repo = Repo.new(full_github_name: "thoughtbot/hound")
 
-        expect(repo).to be_exempt
-      end
-    end
-
-    context "when repo is not exempt" do
-      it "returns false" do
-        repo = Repo.new(full_github_name: "jimbob/hound")
-
-        expect(repo).not_to be_exempt
-      end
-    end
-
-    context "without exempt organizations" do
-      it "returns false" do
-        without_exempt_organizations
-
-        repo = Repo.new(full_github_name: "jimbob/hound")
-
-        expect(repo).not_to be_exempt
-      end
-    end
-
-    context "without full_github_name" do
-      it "returns false" do
-        repo = Repo.new(full_github_name: nil)
-
-        expect(repo).not_to be_exempt
-      end
-    end
-  end
-
-  describe "#stripe_subscription_id" do
-    context "when subscription is nil" do
-      it "returns nil" do
-        repo = Repo.new
-
-        expect(repo.stripe_subscription_id).to be_nil
-      end
-    end
-
-    context "when subscription is present" do
-      it "returns Stripe subscription ID" do
-        subscription = build(:subscription, stripe_subscription_id: "abc123")
-        repo = subscription.repo
-
-        expect(repo.stripe_subscription_id).to eq "abc123"
-      end
-    end
-  end
-
-  describe "#plan_type" do
-    context "when repo is public" do
-      it "returns public plan type" do
-        repo = Repo.new(private: false)
-
-        expect(repo.plan_type).to eq "public"
-      end
-    end
-
-    context "when repo is private" do
-      it "returns private plan type" do
-        repo = Repo.new(private: true)
-
-        expect(repo.plan_type).to eq "private"
-      end
+      expect(repo).to be_exempt
     end
   end
 

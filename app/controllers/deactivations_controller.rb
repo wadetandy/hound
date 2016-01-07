@@ -2,8 +2,6 @@ class DeactivationsController < ApplicationController
   class FailedToActivate < StandardError; end
   class CannotDeactivateRepoWithSubscription < StandardError; end
 
-  before_action :check_for_subscription
-
   def create
     if activator.deactivate
       analytics.track_repo_deactivated(repo)
@@ -25,11 +23,5 @@ class DeactivationsController < ApplicationController
 
   def github_token
     session.fetch(:github_token)
-  end
-
-  def check_for_subscription
-    if repo.subscription
-      raise CannotDeactivateRepoWithSubscription
-    end
   end
 end

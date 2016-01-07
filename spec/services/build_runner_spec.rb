@@ -200,31 +200,6 @@ describe BuildRunner, '#run' do
     end
   end
 
-  context "with subscribed private repo and opened pull request" do
-    it "tracks build events" do
-      repo = create(:repo, :active, github_id: 123, private: true)
-      create(:subscription, repo: repo)
-      payload = stubbed_payload(
-        github_repo_id: repo.github_id,
-        full_repo_name: repo.name
-      )
-      build_runner = BuildRunner.new(payload)
-      stubbed_style_checker_with_violations
-      stubbed_commenter
-      stubbed_pull_request
-      stubbed_github_api
-
-      build_runner.run
-
-      expect(analytics).to have_tracked("Build Started").
-        for_user(repo.subscription.user).
-        with(properties: { name: repo.full_github_name, private: true })
-      expect(analytics).to have_tracked("Build Completed").
-        for_user(repo.subscription.user).
-        with(properties: { name: repo.full_github_name, private: true })
-    end
-  end
-
   def make_build_runner(repo: create(:repo, :active, github_id: 123))
     payload = stubbed_payload(github_repo_id: repo.github_id)
     BuildRunner.new(payload)
