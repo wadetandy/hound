@@ -17,6 +17,10 @@ class Payload
     repository["full_name"]
   end
 
+  def base_branch
+    pull_request['base']['ref']
+  end
+
   def pull_request_number
     data['number']
   end
@@ -33,8 +37,8 @@ class Payload
     data["zen"]
   end
 
-  def merge?
-    merge.present?
+  def pr_was_merged?
+    pull_request? && pull_request['merged'] && (action == 'closed')
   end
 
   def pull_request?
@@ -61,7 +65,8 @@ class Payload
         "changed_files" => changed_files,
         "head" => {
           "sha" => head_sha,
-        }
+        },
+        "base" => pull_request['base']
       },
       "repository" => {
         "id" => github_repo_id,
@@ -87,10 +92,6 @@ class Payload
 
   def pull_request
     data.fetch("pull_request", {})
-  end
-
-  def merge
-    data.fetch("merge", {})
   end
 
   def repository

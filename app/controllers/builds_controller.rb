@@ -4,9 +4,12 @@ class BuildsController < ApplicationController
   skip_before_action :authenticate, only: [:create]
 
   def create
-    binding.pry
     if payload.pull_request?
-      build_job_class.perform_later(payload.build_data)
+      if payload.pr_was_merged?
+        SyncDocsJob.perform(payload.build_data)
+      else
+        build_job_class.perform_later(payload.build_data)
+      end
     end
     head :ok
   end

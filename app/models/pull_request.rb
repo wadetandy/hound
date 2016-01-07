@@ -29,6 +29,10 @@ class PullRequest
     payload.action == "opened"
   end
 
+  def merged?
+    payload.pr_was_merged?
+  end
+
   def synchronize?
     payload.action == "synchronize"
   end

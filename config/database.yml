@@ -1,13 +1,15 @@
 development: &default
   adapter: postgresql
   encoding: unicode
-  database: docsync_dev
-  host: localhost
+  database: sqld
+  user: wtandy_docsync_dv_user
+  password: docsync
+  host: 10.122.70.22
+  port: 4340
+  pool: 5
 
 test:
-  <<: *default
-  database: docsync_test
-
-production:
-  pool: <%= [ENV.fetch("MAX_THREADS", 5), ENV.fetch("DB_POOL", 5)].max %>
-  url:  <%= ENV.fetch("DATABASE_URL") if Rails.env.production? %>
+  adapter: postgresql
+  encoding: unicode
+  database: hound_test
+  pool: 5
