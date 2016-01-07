@@ -3,7 +3,7 @@ class RepoSyncsController < ApplicationController
     unless current_user.refreshing_repos?
       current_user.update_attribute(:refreshing_repos, true)
 
-      RepoSynchronizationJob.perform_later(
+      RepoSynchronizationJob.new.perform(
         current_user,
         session[:github_token]
       )

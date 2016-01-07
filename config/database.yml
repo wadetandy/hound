@@ -1,15 +1,17 @@
 development: &default
   adapter: postgresql
   encoding: unicode
-  database: sqld
-  user: wtandy_docsync_dv_user
-  password: docsync
-  host: 10.122.70.22
-  port: 4340
+  host: localhost
+  database: docsync_dev
+  # database: sqld
+  # user: wtandy_docsync_dv_user
+  # password: docsync
+  # host: 10.122.70.22
+  # port: 4340
   pool: 5
 
 test:
   adapter: postgresql
   encoding: unicode
-  database: hound_test
+  database: docsync_test
   pool: 5

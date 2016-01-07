@@ -20,7 +20,7 @@ class GithubApi
   end
 
   def repos
-    user_repos + repos_from_all_orgs
+    user_repos# + repos_from_all_orgs
   end
 
   def repo(repo_name)

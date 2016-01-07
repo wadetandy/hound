@@ -1,4 +1,4 @@
-source "http://artifactory.dev.bloomberg.com:8080/artifactory/api/gems/rubygems/" # Bloomberg cache of rubygems.org
+source "https://rubygems.org"
 
 ruby "2.2.2"
 
@@ -51,7 +51,7 @@ end
 
 group :test do
   gem "capybara", "~> 2.4.0"
-  gem "capybara-webkit"
+  # gem "capybara-webkit"
   gem "database_cleaner"
   gem "factory_girl_rails"
   gem "launchy"

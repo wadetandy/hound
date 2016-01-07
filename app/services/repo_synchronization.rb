@@ -6,11 +6,14 @@ class RepoSynchronization
     user.repos.clear
     repos = api.repos
 
+    repo_list = []
     Repo.transaction do
       repos.each do |resource|
         attributes = repo_attributes(resource.to_hash)
-        user.repos << Repo.find_or_create_with(attributes)
+        repo_list << Repo.find_or_create_with(attributes)
       end
+
+      user.repos = repo_list
     end
   end
 
